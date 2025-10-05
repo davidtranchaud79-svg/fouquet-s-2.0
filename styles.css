@@ -1,0 +1,17 @@
+:root{--bg:#2A0909;--bordeaux:#5A0D0D;--gold:#C9A227;--ivory:#FFF8E7;--text:#F2E9DA;--muted:#d9c8a4}
+*{box-sizing:border-box}body{margin:0;background:#2A0909;color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:linear-gradient(180deg,#5A0D0D,#3c0d0d);border-bottom:1px solid rgba(201,162,39,.25)}
+.brand{display:flex;align-items:center;gap:10px}.badge{width:36px;height:36px;border-radius:50%;border:3px solid var(--gold);background:#3b0d0d}
+.actions{display:flex;gap:8px;align-items:center}
+.btn{background:#2a0909;border:1px solid rgba(201,162,39,.35);color:var(--ivory);padding:8px 12px;border-radius:10px;cursor:pointer}
+.btn.gold{background:var(--gold);color:#2b1d0b;border-color:var(--gold);font-weight:800}.btn.ghost{background:transparent;border-color:transparent;color:var(--text)}
+.nav{display:flex;gap:6px;flex-wrap:wrap;padding:8px 12px;background:#300b0b;border-bottom:1px solid rgba(201,162,39,.15)}
+.nav button{background:transparent;color:var(--text);border:1px solid rgba(201,162,39,.25);padding:8px 12px;border-radius:999px;cursor:pointer}
+.nav .active,.nav button:hover{background:var(--gold);color:#220;font-weight:800}
+main{max-width:1100px;margin:0 auto;padding:12px}
+.card{background:linear-gradient(180deg,#571414,#4a1010);border:1px solid rgba(201,162,39,.25);border-radius:14px;padding:14px;margin:12px 0}
+.grid{display:grid;gap:12px}.kpi{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}.graphs{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}.form-grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.tablewrap{overflow:auto;max-height:400px}table{width:100%;border-collapse:collapse}th,td{padding:8px;border-bottom:1px solid rgba(201,162,39,.15);text-align:left}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;background:var(--gold);color:#2b1d0b;padding:8px 14px;border-radius:10px;font-weight:800;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.hidden{display:none!important}.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center}.modal.hidden{display:none!important}
+.modal .box{background:#2b0b0b;border:1px solid rgba(201,162,39,.3);border-radius:14px;padding:18px;width:360px}

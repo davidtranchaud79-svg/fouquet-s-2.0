@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fouquet’s Suite — Paris</title>
+  <meta name="theme-color" content="#5A0D0D" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="badge"></div>
+      <h1>Fouquet’s Suite — Paris</h1>
+    </div>
+    <div class="actions">
+      <label for="langSelect">🌐</label>
+      <select id="langSelect"><option value="fr">FR</option><option value="en">EN</option><option value="es">ES</option><option value="it">IT</option></select>
+      <button id="btnSettings" class="btn ghost">⚙️</button>
+    </div>
+  </header>
+
+  <nav class="nav">
+    <button data-route-link="home" class="active">Dashboard</button>
+    <button data-route-link="pertes">Pertes</button>
+    <button data-route-link="inventaire-j">Inventaire journalier</button>
+    <button data-route-link="inventaire-m">Inventaire mensuel</button>
+    <button data-route-link="recettes">Recettes</button>
+    <button data-route-link="rapports">Rapports</button>
+  </nav>
+
+  <main>
+    <section class="route" data-route="home">
+      <div class="grid kpi">
+        <div class="card"><b>Pertes 7j</b><div id="kpiPerte7j">—</div></div>
+        <div class="card"><b>Stock du jour</b><div id="kpiStockJour">—</div><small id="kpiStockDelta">Δ jour : —</small></div>
+        <div class="card"><b>Top perdu</b><div id="kpiTopPerdu">—</div></div>
+        <div class="card"><b>Recettes actives</b><div id="kpiRecettes">—</div></div>
+      </div>
+      <div class="grid graphs">
+        <div class="card"><h3>Stock en temps réel — valeur par zone</h3><canvas id="chartStockZones"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>Détail du stock (réel)</h3>
+        <div class="grid" style="grid-template-columns:1fr auto">
+          <input id="stockSearch" placeholder="Rechercher produit/zone…"/>
+          <button id="btnExportStock" class="btn">Exporter CSV</button>
+        </div>
+        <div id="stockTableWrap" class="tablewrap">—</div>
+      </div>
+    </section>
+
+    <section class="route hidden" data-route="pertes">
+      <div class="card">
+        <h3>Pertes journalières</h3>
+        <div class="grid form-grid">
+          <div><label>Produit</label><input id="perteProduit" list="dlProduits" placeholder="Saisir ou choisir" /><datalist id="dlProduits"></datalist></div>
+          <div><label>Quantité</label><input id="perteQte" type="number" min="0" step="0.01" /></div>
+          <div><label>Unité</label><input id="perteUnite" list="dlUnites" placeholder="kg, L, pcs" /><datalist id="dlUnites"></datalist></div>
+          <div><label>Motif</label><input id="perteMotif" list="dlMotifs" placeholder="Périmé, Casse…" /><datalist id="dlMotifs"><option value="Périmé"><option value="Casse"><option value="Erreur prod"></datalist></div>
+          <div><label>Zone</label><input id="perteZone" list="dlZones" placeholder="Cuisine, Bar…" /><datalist id="dlZones"></datalist></div>
+          <div style="align-self:end"><button id="btnPerteSave" class="btn gold">Enregistrer</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="route hidden" data-route="inventaire-j">
+      <div class="card">
+        <h3>Inventaire journalier</h3>
+        <div class="grid form-grid">
+          <div><label>Flux</label><input id="jFlux" list="dlFlux" placeholder="ENTREE / SORTIE / PERTE"/><datalist id="dlFlux"><option value="ENTREE"><option value="SORTIE"><option value="PERTE"></datalist></div>
+          <div><label>Produit</label><input id="jProduit" list="dlProduits" placeholder="Saisir ou choisir" /></div>
+          <div><label>Quantité</label><input id="jQte" type="number" min="0" step="0.01" /></div>
+          <div><label>Unité</label><input id="jUnite" list="dlUnites" placeholder="kg, L, pcs" /></div>
+          <div><label>Zone</label><input id="jZone" list="dlZones" placeholder="Cuisine, Bar…" /></div>
+          <div style="align-self:end"><button id="btnJSave" class="btn gold">Enregistrer</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="route hidden" data-route="inventaire-m">
+      <div class="card">
+        <h3>Inventaire mensuel</h3>
+        <div class="grid form-grid">
+          <div><label>Mois</label><input id="mMonth" type="month" /></div>
+          <div><label>Zone</label><input id="mZone" list="dlZones" placeholder="Cuisine, Bar…" /></div>
+          <div><label>Famille</label><input id="mFam" list="dlFamilles" placeholder="Poissons, Laitiers…" /><datalist id="dlFamilles"></datalist></div>
+          <div style="align-self:end"><button id="btnMGen" class="btn">Générer</button></div>
+        </div>
+      </div>
+      <div id="mGrouped" class="card"></div>
+    </section>
+
+    <section class="route hidden" data-route="recettes">
+      <div class="card">
+        <h3>Recettes</h3>
+        <div class="grid form-grid">
+          <div><label>Recherche</label><input id="rSearch" placeholder="Nom ou catégorie…" /></div>
+          <div><label>Multiplicateur</label><input id="rMul" type="number" min="0.1" step="0.1" value="1" /></div>
+          <div style="align-self:end"><button id="btnProduire" class="btn gold">Produire</button></div>
+        </div>
+        <div id="rList" class="tablewrap small">—</div>
+      </div>
+    </section>
+
+    <section class="route hidden" data-route="rapports">
+      <div class="card">
+        <h3>Rapports</h3>
+        <div class="grid form-grid">
+          <div><label>Mois</label><input id="repMonth" type="month" /></div>
+          <div><label>Type</label><select id="repType"><option value="pdf">PDF</option><option value="xlsx">Excel</option></select></div>
+          <div style="align-self:end"><button id="btnRep" class="btn">Générer</button></div>
+        </div>
+        <div id="repOut" class="small">—</div>
+      </div>
+    </section>
+  </main>
+
+  <div id="modal" class="modal hidden">
+    <div class="box">
+      <h3>Configuration</h3>
+      <label>API URL (Apps Script /exec)</label><input id="cfgApiUrl" placeholder="https://script.google.com/.../exec" />
+      <label>API Key</label><input id="cfgApiKey" placeholder="clé API" />
+      <div class="grid" style="grid-template-columns:1fr auto;margin-top:8px">
+        <div></div><button id="btnCfgSave" class="btn gold">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+  <footer>© Fouquet’s Paris — Suite de gestion</footer>
+  <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'))}</script>
+</body>
+</html>
